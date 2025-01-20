@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  test_resource_format_loader.h                                         */
+/*  test_resource_loader.h                                                */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -80,4 +80,4 @@ TEST_CASE("[ResourceFormatLoader] Load Whitelisted - Malicious Path") {
 	CHECK_FALSE(resource.is_valid());
 }
 
-} // namespace dif // TEST_RESOURCE_LOADER_H
+} //namespace TestResourceLoader
