@@ -47,7 +47,7 @@ jobs:
           scons platform=windows target=template_release module_mono_enabled=yes
           bin/godot.windows.editor.x86_64.mono --headless --generate-mono-glue modules/mono/glue
           ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=windows
-          Compress-Archive -Path doc/* -Destination zerofkndevs-godot.zip
+          Compress-Archive -Path bin/* -Destination zerofkndevs-godot.zip
       
       - name: Release
         uses: softprops/action-gh-release@v2
