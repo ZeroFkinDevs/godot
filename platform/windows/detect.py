@@ -489,6 +489,7 @@ def configure_msvc(env: "SConsEnvironment", vcvars_msvc_config):
 
     env.AppendUnique(
         CPPDEFINES=[
+            "_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR",
             "WINDOWS_ENABLED",
             "WASAPI_ENABLED",
             "WINMIDI_ENABLED",

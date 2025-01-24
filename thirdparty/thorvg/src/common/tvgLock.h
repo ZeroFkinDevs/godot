@@ -25,54 +25,46 @@
 
 #ifdef THORVG_THREAD_SUPPORT
 
-#define _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR
-
-#include <mutex>
 #include "tvgTaskScheduler.h"
+#include <mutex>
 
 namespace tvg {
 
-    struct Key
-    {
-        std::mutex mtx;
-    };
+struct Key {
+	std::mutex mtx;
+};
 
-    struct ScopedLock
-    {
-        Key* key = nullptr;
+struct ScopedLock {
+	Key *key = nullptr;
 
-        ScopedLock(Key& k)
-        {
-            if (TaskScheduler::threads() > 0) {
-                k.mtx.lock();
-                key = &k;
-            }
-        }
+	ScopedLock(Key &k) {
+		if (TaskScheduler::threads() > 0) {
+			k.mtx.lock();
+			key = &k;
+		}
+	}
 
-        ~ScopedLock()
-        {
-            if (TaskScheduler::threads() > 0) {
-                key->mtx.unlock();
-            }
-        }
-    };
+	~ScopedLock() {
+		if (TaskScheduler::threads() > 0) {
+			key->mtx.unlock();
+		}
+	}
+};
 
-}
+} //namespace tvg
 
 #else //THORVG_THREAD_SUPPORT
 
 namespace tvg {
 
-    struct Key {};
+struct Key {};
 
-    struct ScopedLock
-    {
-        ScopedLock(Key& key) {}
-    };
+struct ScopedLock {
+	ScopedLock(Key &key) {}
+};
 
-}
+} //namespace tvg
 
 #endif //THORVG_THREAD_SUPPORT
 
 #endif //_TVG_LOCK_H_
-
