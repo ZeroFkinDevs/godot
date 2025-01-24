@@ -5,6 +5,45 @@ on:
     - 'zfd-v*'
 
 jobs:
+
+  build_linux:
+    permissions:
+      contents: write
+    name: Linux Export
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: .NET installation
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Setup Python and SCons
+        uses: ./.github/actions/godot-deps
+
+      - name: Setup GCC problem matcher
+        uses: ammaraskar/gcc-problem-matcher@master
+      
+      - name: Linux Build
+        run: |
+          scons platform=linuxbsd target=editor module_mono_enabled=yes
+          # scons platform=linuxbsd target=template_release module_mono_enabled=yes
+          bin/godot.linuxbsd.editor.x86_64.mono --headless --generate-mono-glue modules/mono/glue
+          python ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=linuxbsd
+          cd bin
+          zip -r "../zerofkndevs-godot-linux.zip" *
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            zerofkndevs-godot-linux.zip
+
   build_windows:
     permissions:
       contents: write
@@ -48,7 +87,7 @@ jobs:
           bin/godot.windows.editor.x86_64.mono --headless --generate-mono-glue modules/mono/glue
           python ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=windows
           Compress-Archive -Path bin/* -Destination zerofkndevs-godot.zip
-      
+
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
